@@ -1,3 +1,5 @@
+Instructions:
+
 1. Git clone this repo
 
 2. docker compose up --build.
