@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dwh
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts:/docker-entrypoint-initdb.d
+      - ./data:/data
+    networks:
+      - dwh_network
+
+  spark:
+    build:
+      context: .
+    container_name: spark
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notes:/home/jovyan/notes
+    networks:
+      - dwh_network
+    depends_on:
+      - postgres
+
+networks:
+  dwh_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
